@@ -10,3 +10,7 @@ Freenect.jl is a wrapper around the [libfreenect](https://github.com/OpenKinect/
 This package only supports Kinect v1, which comes from the XBox 360 era.
 
 For installation and usage please visit the [documentation](https://dmillard.github.io/Freenect.jl/dev).
+
+## Acknowledgements
+
+The development of this software was supported in part by the NASA Space Technology Research Fellowship, grant number 80NSSC19K1182.
