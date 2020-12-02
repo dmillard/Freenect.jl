@@ -3,6 +3,9 @@ uuid = "3da711cf-ac70-47ad-bd8d-7cd93f6093d7"
 authors = ["dmillard <dmillard10@gmail.com> and contributors"]
 version = "0.1.0"
 
+[deps]
+libfreenect_jll = "05d52523-c636-5a6c-8a6a-526edab90d71"
+
 [compat]
 julia = "1"
 
