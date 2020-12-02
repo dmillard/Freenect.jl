@@ -1,4 +1,4 @@
-# Freenect
+# Freenect.jl
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://dmillard.github.io/Freenect.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://dmillard.github.io/Freenect.jl/dev)
@@ -9,8 +9,4 @@ Freenect.jl is a wrapper around the [libfreenect](https://github.com/OpenKinect/
 
 This package only supports Kinect v1, which comes from the XBox 360 era.
 
-You do not need libfreenect installed to use Freenect.jl, you can just do
-```julia
-using Pkg
-Pkg.add("Freenect")
-```
+For installation and usage please visit the [documentation](https://dmillard.github.io/Freenect.jl/dev).
