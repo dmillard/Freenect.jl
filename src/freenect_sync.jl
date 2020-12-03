@@ -48,7 +48,7 @@ const video_format_to_channels = Dict{VideoFormat,Int}(
 )
 
 """
-See http://openkinect.org/wiki/Protocol_Documentation#RGB_Camera for more information.
+See <http://openkinect.org/wiki/Protocol_Documentation#RGB_Camera> for more information.
 """
 @exported_enum DepthFormat begin
     depth_11bit = 0 # 11 bit depth information in one uint16_t/pixel

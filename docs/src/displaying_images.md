@@ -6,7 +6,7 @@ only returns arrays of data.
 Here are some examples of using the [JuliaImages](https://juliaimages.org)
 suite to display data from the Kinect.
 
-Before running these examples, be sure to install the relevant packages.
+Before running these examples, be sure to install the relevant packages:
 
 ```julia
 using Pkg
@@ -49,7 +49,7 @@ imshow(colorview(Gray, depth ./ 2^11))
 
 ## Point Cloud Image
 
-While XYZ to RGB isn't the cleanest visualizer, it works in a pinch.
+While direct XYZ to RGB isn't the cleanest visualizer, it works in a pinch.
 
 ```julia
 using Freenect, Images, ImageView
