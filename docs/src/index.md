@@ -1,12 +1,9 @@
-```@meta
-CurrentModule = Freenect
-```
+# Freenect.jl
 
-# Freenect
+Freenect.jl is a wrapper around the libfreenect open source Microsoft Kinect driver.
 
-```@index
-```
+This package only supports Kinect v1, which comes from the XBox 360 era.
 
-```@autodocs
-Modules = [Freenect]
-```
+## Acknowledgements
+
+The development of this software was supported in part by the NASA Space Technology Research Fellowship, grant number 80NSSC19K1182.

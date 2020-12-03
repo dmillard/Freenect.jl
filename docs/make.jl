@@ -13,6 +13,10 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
+        "installation.md",
+        "getting_started.md",
+        "displaying_images.md",
+        "reference.md"
     ],
 )
 

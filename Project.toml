@@ -4,6 +4,7 @@ authors = ["dmillard <dmillard10@gmail.com> and contributors"]
 version = "0.1.0"
 
 [deps]
+DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 libfreenect_jll = "05d52523-c636-5a6c-8a6a-526edab90d71"
 
 [compat]

@@ -1,3 +1,6 @@
+"""
+Available modes for the LED on the Kinect.
+"""
 @exported_enum LEDMode begin
     off = 0
     green = 1
@@ -11,7 +14,7 @@ end
 Enumeration of available resolutions.
 Not all available resolutions are actually supported for all video formats.
 Frame modes may not perfectly match resolutions.  For instance,
-FREENECT_RESOLUTION_MEDIUM is 640x488 for the IR camera.
+`resolution_medium` is 640x488 for the IR camera.
 """
 @exported_enum Resolution begin
     resolution_low = 0 # QVGA - 320 x 240
@@ -26,7 +29,7 @@ const resolution_to_dims = Dict{Resolution,NTuple{2,Int}}(
 )
 
 """
-See http://openkinect.org/wiki/Protocol_Documentation#RGB_Camera for more information.
+See <http://openkinect.org/wiki/Protocol_Documentation#RGB_Camera> for more information.
 """
 @exported_enum VideoFormat begin
     video_rgb = 0 # Decompressed RGB mode (demosaicing done by libfreenect)
@@ -64,12 +67,22 @@ const wrappable_depth_formats = Set{DepthFormat}([
     # I haven't used the other modes enough to wrap them. Contributions welcome!
 ])
 
+"""
+Possible status codes returned in [`RawTiltState`](@ref).
+"""
 @exported_enum TiltStatusCode begin
     tilt_status_stopped = 0x00
     tilt_status_limit = 0x01
     tilt_status_moving = 0x04
 end
 
+"""
+$(TYPEDEF)
+
+$(TYPEDFIELDS)
+
+This data is currently uninterpreted and only provided raw.
+"""
 struct RawTiltState
     accelerometer_x::Cshort
     accelerometer_y::Cshort
@@ -83,16 +96,91 @@ export RawTiltState
 
 # These are just a thin wrapper around the ccall
 
-@exported_cfun sync_get_video_with_res(video::Ref{Ptr{Cvoid}}, timestamp::Ref{Cuint}, index::Cint, res::Cint, fmt::Cint)::Cint
-@exported_cfun sync_get_video(video::Ref{Ptr{Cvoid}}, timestamp::Ref{Cuint}, index::Cint, fmt::Cint)::Cint
-@exported_cfun sync_get_depth_with_res(depth::Ref{Ptr{Cvoid}}, timestamp::Ref{Cuint}, index::Cint, res::Cint, fmt::Cint)::Cint
-@exported_cfun sync_get_depth(depth::Ref{Ptr{Cvoid}}, timestamp::Ref{Cuint}, index::Cint, fmt::Cint)::Cint
-@exported_cfun sync_set_tilt_degs(angle::Cint, index::Cint)::Cint
-@exported_cfun sync_get_tilt_state(state::Ref{Ptr{RawTiltState}}, index::Cint)::Cint
-@exported_cfun sync_set_led(led::Cint, index::Cint)::Cint
+@exported_cfun begin
+    """
+    $(TYPEDSIGNATURES)
+
+    Synchronous video function, starts the runloop if it isn't running
+
+    The returned buffer is valid until this function is called again, after
+    which the buffer must not be used again. Make a copy if the data is
+    required.
+    """
+    sync_get_video_with_res(video::Ref{Ptr{Cvoid}}, timestamp::Ref{Cuint}, index::Cint, res::Cint, fmt::Cint)::Cint
+end
+
+@exported_cfun begin
+    """
+    $(TYPEDSIGNATURES)
+
+    Does the exact same as [`sync_get_video_with_res`](@ref), with a default
+    resolution of `resolution_medium`.
+    """
+    sync_get_video(video::Ref{Ptr{Cvoid}}, timestamp::Ref{Cuint}, index::Cint, fmt::Cint)::Cint
+end
+
+@exported_cfun begin
+    """
+    $(TYPEDSIGNATURES)
+
+    Synchronous depth function, starts the runloop if it isn't running
+
+    In the raw pointer version, the returned buffer is valid until this
+    function is called again, after which the buffer must not be used again.
+    Make a copy if the data is required. The version returning an array does
+    not have this limitation.
+    """
+    sync_get_depth_with_res(depth::Ref{Ptr{Cvoid}}, timestamp::Ref{Cuint}, index::Cint, res::Cint, fmt::Cint)::Cint
+end
+
+@exported_cfun begin
+    """
+    $(TYPEDSIGNATURES)
+
+    Does the exact same as [`sync_get_depth_with_res`](@ref), with a default
+    resolution of `resolution_medium`.
+    """
+    sync_get_depth(depth::Ref{Ptr{Cvoid}}, timestamp::Ref{Cuint}, index::Cint, fmt::Cint)::Cint
+end
+
+@exported_cfun begin
+    """
+    $(TYPEDSIGNATURES)
+
+    Tilt the kinect to `angle`. Starts the runloop if it isn't running.
+    """
+    sync_set_tilt_degs(angle::Cint, index::Cint)::Cint
+end
+
+@exported_cfun begin
+    """
+    $(TYPEDSIGNATURES)
+
+    Tilt state function, starts the runloop if it isn't running.
+
+    The returned pointer is only safe until the next call to this function.
+    """
+    sync_get_tilt_state(state::Ref{Ptr{RawTiltState}}, index::Cint)::Cint
+end
+
+@exported_cfun begin
+    """
+    $(TYPEDSIGNATURES)
+
+    Set the LED to the given mode, starts the runloop if it isn't running.
+    """
+    sync_set_led(led::Cint, index::Cint)::Cint
+end
 
 # These should be safe to call and use the return values
 
+"""
+$(TYPEDSIGNATURES)
+
+Synchronous video function, starts the runloop if it isn't running.
+
+The returned array is copied before returning and is safe to store.
+"""
 function sync_get_video_with_res(index::Integer, res::Resolution, fmt::VideoFormat)
     if fmt ∉ keys(video_format_to_channels)
         error(
@@ -109,10 +197,30 @@ function sync_get_video_with_res(index::Integer, res::Resolution, fmt::VideoForm
     wrapped_video = unsafe_wrap(Array, convert(Ptr{UInt8}, unsafe_video[]), (channels, cols, rows))
     wrapped_video_transpose = PermutedDimsArray(wrapped_video, [1, 3, 2])
 
+    if channels == 1
+        wrapped_video_transpose = view(wrapped_video_transpose, 1, :, :)
+    end
+
     return copy(wrapped_video_transpose), Int(timestamp[])
 end
+
+"""
+$(TYPEDSIGNATURES)
+
+Synchronous video function with resolution `resolution_medium`, starts the
+runloop if it isn't running.
+
+The returned array is copied before returning and is safe to store.
+"""
 sync_get_video(index::Integer, fmt::VideoFormat) = sync_get_video_with_res(index, resolution_medium, fmt)
 
+"""
+$(TYPEDSIGNATURES)
+
+Synchronous depth function, starts the runloop if it isn't running.
+
+The returned array is copied before returning and is safe to store.
+"""
 function sync_get_depth_with_res(index::Integer, res::Resolution, fmt::DepthFormat)
     if fmt ∉ wrappable_depth_formats
         error(
@@ -130,8 +238,24 @@ function sync_get_depth_with_res(index::Integer, res::Resolution, fmt::DepthForm
 
     return copy(wrapped_depth_transpose), Int(timestamp[])
 end
+
+"""
+$(TYPEDSIGNATURES)
+
+Synchronous depth function with resolution `resolution_medium`, starts the
+runloop if it isn't running.
+
+The returned array is copied before returning and is safe to store.
+"""
 sync_get_depth(index::Integer, fmt::DepthFormat) = sync_get_depth_with_res(index, resolution_medium, fmt)
 
+"""
+$(TYPEDSIGNATURES)
+
+Tilt state function, starts the runloop if it isn't running.
+
+The returned `RawTiltState` struct is safe to store.
+"""
 function sync_get_tilt_state(index::Integer)
     state = Ref{Ptr{RawTiltState}}(C_NULL)
     sync_get_tilt_state(state, index)

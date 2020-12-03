@@ -1,5 +1,11 @@
 # This file is machine-generated - editing it directly is not advised
 
+[[Artifacts]]
+deps = ["Pkg"]
+git-tree-sha1 = "c30985d8821e0cd73870b17b0ed0ce6dc44cb744"
+uuid = "56f22d72-fd6d-98f1-02f0-08ddc0907c33"
+version = "1.3.0"
+
 [[Base64]]
 uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 
@@ -24,6 +30,7 @@ uuid = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 version = "0.25.5"
 
 [[Freenect]]
+deps = ["DocStringExtensions", "libfreenect_jll"]
 path = ".."
 uuid = "3da711cf-ac70-47ad-bd8d-7cd93f6093d7"
 version = "0.1.0"
@@ -37,6 +44,11 @@ version = "0.1.1"
 [[InteractiveUtils]]
 deps = ["Markdown"]
 uuid = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
+
+[[JLLWrappers]]
+git-tree-sha1 = "c70593677bbf2c3ccab4f7500d0f4dacfff7b75c"
+uuid = "692b3bcd-3c85-4b1f-b108-f13ce0eb3210"
+version = "1.1.3"
 
 [[JSON]]
 deps = ["Dates", "Mmap", "Parsers", "Unicode"]
@@ -102,3 +114,15 @@ uuid = "cf7118a7-6976-5b1a-9a39-7adc72f591a4"
 
 [[Unicode]]
 uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
+
+[[libfreenect_jll]]
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg", "libusb_jll"]
+git-tree-sha1 = "354db8246cfbd50ed95311358066df3dda0ab773"
+uuid = "05d52523-c636-5a6c-8a6a-526edab90d71"
+version = "0.6.1+1"
+
+[[libusb_jll]]
+deps = ["Libdl", "Pkg"]
+git-tree-sha1 = "db37b21e223cdcc4b7185ea6795154b54780aa4e"
+uuid = "a877fdc9-fe69-5ed6-b93d-11ecd0dc2d49"
+version = "1.0.23+0"

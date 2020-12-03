@@ -20,13 +20,24 @@ function compute_world_X_depth()
 end
 const world_X_depth = compute_world_X_depth()
 
+"""
+$(TYPEDSIGNATURES)
+
+Helper for getting a pointcloud from the camera at `index`.
+
+The resulting point cloud is relative to the camera, with X forward, Y left,
+and Z up.
+
+This function uses a fixed homography matrix - you may have better results
+for your own hardware by calibrating your Kinect.
+"""
 function sync_get_pointcloud(index::Integer)
     depth, timestamp = sync_get_depth(index, depth_11bit)
-    cloud = zeros((3, 640, 480))
+    cloud = zeros((3, 480, 640))
     for i ∈ 1:480, j ∈ 1:640
         uvw = Float64[j - 1, i - 1, depth[i, j], 1.0]
         xyzw = world_X_depth * uvw
-        cloud[:, j, i] .= xyzw[1:3] ./ xyzw[4]
+        cloud[:, i, j] .= xyzw[1:3] ./ xyzw[4]
     end
 
     return cloud, timestamp
