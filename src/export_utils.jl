@@ -24,7 +24,7 @@ macro exported_cfun(proto)
     defn = quote
         function $name($(argname.(args)...))
             ccall(
-                ($(QuoteNode(Symbol("freenect_", name))), :libfreenect_sync),
+                ($(QuoteNode(Symbol("freenect_", name))), libfreenect_jll.libfreenect_sync),
                 $returntype,
                 ($(argtype.(args)...),),
                 $(argname.(args)...)

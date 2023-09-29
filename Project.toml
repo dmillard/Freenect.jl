@@ -1,7 +1,7 @@
 name = "Freenect"
 uuid = "3da711cf-ac70-47ad-bd8d-7cd93f6093d7"
 authors = ["dmillard <dmillard10@gmail.com> and contributors"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
